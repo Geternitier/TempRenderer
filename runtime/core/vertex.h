@@ -11,7 +11,7 @@ namespace TempRenderer{
 
 struct Vertex {
     Color color;
-    Vector3f coordinate;
+    Vector3f position;
     Vector3f normal;
 };
 

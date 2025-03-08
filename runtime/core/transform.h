@@ -4,13 +4,13 @@
 
 #pragma once
 
-#include "vertex.h"
+#include "vector3f.h"
+#include "matrix4f.h"
 
 namespace TempRenderer {
 
-struct Triangle {
-    Vertex vertexes[3];
+class Transform {
+public:
 };
 
 }
-

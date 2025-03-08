@@ -7,12 +7,11 @@
 
 #include <vector>
 
-#include "../core/vertex.h"
-#include "../core/vector3f.h"
+#include "core/vertex.h"
+#include "core/vector3f.h"
 
 namespace TempRenderer {
 
-// 创建立方体模型
 std::vector<Vertex> createCube() {
     std::vector<Vertex> cube;
     std::vector<Vector3f> positions = {
@@ -22,7 +21,7 @@ std::vector<Vertex> createCube() {
             {-0.5, -0.5, -0.5}, {0.5, -0.5, -0.5}, {0.5, 0.5, -0.5}, {-0.5, 0.5, -0.5}
     };
 
-    std::vector<Vector3f> colors = {
+    std::vector<Color> colors = {
             {1,0,0}, {0,1,0}, {0,0,1}, {1,1,0},
             {1,0,1}, {0,1,1}, {0.5,0.5,0.5}, {1,1,1}
     };
@@ -38,8 +37,8 @@ std::vector<Vertex> createCube() {
 
     for (int i = 0; i < indices.size(); i += 3) {
         for (int j = 0; j < 3; j++) {
-            Vertex v;
-            v.coordinate = positions[indices[i+j]];
+            Vertex v{};
+            v.position = positions[indices[i + j]];
             v.color = colors[indices[i+j]];
             cube.push_back(v);
         }
