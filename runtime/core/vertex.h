@@ -10,9 +10,10 @@
 namespace TempRenderer{
 
 struct Vertex {
-    Color color;
     Vector3f position;
-    Vector3f normal;
+    Color color;
+
+    Vertex& operator=(const Vertex& rhs) { position = rhs.position; color = rhs.color; return *this; }
 };
 
 }

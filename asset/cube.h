@@ -16,14 +16,18 @@ std::vector<Vertex> createCube() {
     std::vector<Vertex> cube;
     std::vector<Vector3f> positions = {
             // 前面
-            {-0.5, -0.5, 0.5}, {0.5, -0.5, 0.5}, {0.5, 0.5, 0.5}, {-0.5, 0.5, 0.5},
+            {-0.5, -0.5, 0.5}, {0.5, -0.5, 0.5},
+            {0.5, 0.5, 0.5}, {-0.5, 0.5, 0.5},
             // 后面
-            {-0.5, -0.5, -0.5}, {0.5, -0.5, -0.5}, {0.5, 0.5, -0.5}, {-0.5, 0.5, -0.5}
+            {-0.5, -0.5, -0.5}, {0.5, -0.5, -0.5},
+            {0.5, 0.5, -0.5}, {-0.5, 0.5, -0.5}
     };
 
     std::vector<Color> colors = {
-            {1,0,0}, {0,1,0}, {0,0,1}, {1,1,0},
-            {1,0,1}, {0,1,1}, {0.5,0.5,0.5}, {1,1,1}
+            {1,0,0}, {0,1,0},
+            {0,0,1}, {1,1,0},
+            {1,0,1}, {0,1,1},
+            {0.5,0.5,0.5}, {1,1,1}
     };
 
     std::vector<int> indices = {
@@ -43,7 +47,43 @@ std::vector<Vertex> createCube() {
             cube.push_back(v);
         }
     }
+
     return cube;
+}
+
+Mesh createCubeMesh() {
+    unsigned int vertexNum = 8;
+    unsigned int indicesSize = 36;
+
+    std::vector<Vector3f> positions = {
+            // 前面
+            {-0.5, -0.5, 0.5}, {0.5, -0.5, 0.5},
+            {0.5, 0.5, 0.5}, {-0.5, 0.5, 0.5},
+            // 后面
+            {-0.5, -0.5, -0.5}, {0.5, -0.5, -0.5},
+            {0.5, 0.5, -0.5}, {-0.5, 0.5, -0.5}
+    };
+    std::vector<Color> colors = {
+            {1,0,0}, {0,1,0},
+            {0,0,1}, {1,1,0},
+            {1,0,1}, {0,1,1},
+            {0.5,0.5,0.5}, {1,1,1}
+    };
+    std::vector<unsigned int> indices = {
+            0,1,2, 0,2,3, // 前
+            4,5,6, 4,6,7, // 后
+            0,3,7, 0,7,4, // 左
+            1,2,6, 1,6,5, // 右
+            0,1,5, 0,5,4, // 下
+            3,2,6, 3,6,7  // 上
+    };
+
+    std::vector<Vertex> cube(vertexNum);
+    for (int i = 0; i < positions.size(); ++i) {
+        cube[i] = Vertex{positions[i], colors[i]};
+    }
+
+    return {vertexNum, indicesSize, cube, indices};
 }
 
 }

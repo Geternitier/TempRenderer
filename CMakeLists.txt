@@ -15,8 +15,8 @@ add_executable(TempRenderer main.cpp
         runtime/core/vector3f.h
         runtime/render/renderer.cpp
         runtime/render/renderer.h
-        runtime/render/screen.cpp
-        runtime/render/screen.h
+        runtime/util/screen.cpp
+        runtime/util/screen.h
         asset/cube.h
         runtime/core/matrix4f.h
         runtime/core/transform.h
@@ -29,6 +29,8 @@ add_executable(TempRenderer main.cpp
         runtime/core/math.h
         runtime/core/angle.h
         runtime/core/vector4f.h
-        runtime/core/matrix4f.cpp)
+        runtime/core/matrix4f.cpp
+        scene/index.cpp
+        scene/index.h)
 
 target_link_libraries(TempRenderer ${OpenCV_LIBS})

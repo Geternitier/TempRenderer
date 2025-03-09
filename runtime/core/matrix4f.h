@@ -14,6 +14,8 @@ namespace TempRenderer {
 struct Matrix4f {
     float matrix[4][4] = {0};
 
+    void fill(float value);
+
     // 矩阵运算
     Matrix4f operator+(const Matrix4f& rhs) const;
     void operator+=(const Matrix4f& rhs);

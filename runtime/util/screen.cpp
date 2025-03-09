@@ -6,4 +6,8 @@
 
 namespace TempRenderer {
 
+int Screen::width = 1920;
+int Screen::height = 1080;
+float Screen::aspect = 1920.f / 1080.f;
+
 } // TempRenderer

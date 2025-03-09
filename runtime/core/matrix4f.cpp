@@ -6,6 +6,14 @@
 
 namespace TempRenderer {
 
+void Matrix4f::fill(float value) {
+    for (auto & i : matrix) {
+        for (float & j : i) {
+            j = value;
+        }
+    }
+}
+
 Matrix4f Matrix4f::operator+(const Matrix4f &rhs) const {
     Matrix4f result;
     for (int i = 0; i < 4; ++i) {
@@ -120,6 +128,5 @@ std::ostream &operator<<(std::ostream &out, const Matrix4f &matrix) {
     out << "]" << std::endl;
     return out;
 }
-
 
 }

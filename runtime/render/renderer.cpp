@@ -6,20 +6,14 @@
 
 namespace TempRenderer {
 
-void Renderer::resizeScreen(int width, int height) {
-    screen.resize(width, height);
-    frameBuffer = cv::Mat{height, width, CV_8UC3, freshColor.toScalar()};
-    depthBuffer = cv::Mat{height, width, CV_32F, -1.f};
-}
-
 void Renderer::clear() {
     frameBuffer.setTo(freshColor.toScalar());
     depthBuffer.setTo(-1.f);
 }
 
 void Renderer::viewportTransform(TempRenderer::Vector3f &coordinate) const {
-    coordinate.x = (coordinate.x + 1) * 0.5f * screen.width;
-    coordinate.y = (coordinate.y + 1) * 0.5f * screen.height;
+    coordinate.x = (coordinate.x + 1) * 0.5f * Screen::Width();
+    coordinate.y = (coordinate.y + 1) * 0.5f * Screen::Height();
 }
 
 void Renderer::rasterizeTriangle(const Vertex &v1, const Vertex &v2, const Vertex &v3) {
@@ -33,9 +27,9 @@ void Renderer::rasterizeTriangle(const Vertex &v1, const Vertex &v2, const Verte
 
     // 计算包围盒
     int minX = std::max(0, (int)std::floor(std::min({p1.x, p2.x, p3.x})));
-    int maxX = std::min(screen.width - 1, (int)std::ceil(std::max({p1.x, p2.x, p3.x})));
+    int maxX = std::min(Screen::Width() - 1, (int)std::ceil(std::max({p1.x, p2.x, p3.x})));
     int minY = std::max(0, (int)std::floor(std::min({p1.y, p2.y, p3.y})));
-    int maxY = std::min(screen.height - 1, (int)std::ceil(std::max({p1.y, p2.y, p3.y})));
+    int maxY = std::min(Screen::Height() - 1, (int)std::ceil(std::max({p1.y, p2.y, p3.y})));
 
     for (int y = minY; y <= maxY; ++y) {
         for (int x = minX; x <= maxX; ++x) {
@@ -49,6 +43,35 @@ void Renderer::rasterizeTriangle(const Vertex &v1, const Vertex &v2, const Verte
                 depthBuffer.at<float>(y, x) = depth;
             }
         }
+    }
+}
+
+void Renderer::render(const Mesh &mesh) {
+    clear();
+    const Camera* camera = Camera::getCurrentCamera();
+    if (camera == nullptr) {
+        std::cout << "No Camera in the Scene, Renderer quit." << std::endl;
+        return;
+    }
+
+    Matrix4f view = camera->getViewMatrix();
+    Matrix4f perspective = camera->getProjectionMatrix();
+
+    Vertex v1{}, v2{}, v3{};
+    for (int i = 0; i < mesh.vertexIndexNum; ++i) {
+        v1 = mesh.vertexData[mesh.vertexIndexData[i]];
+        v2 = mesh.vertexData[mesh.vertexIndexData[i + 1]];
+        v3 = mesh.vertexData[mesh.vertexIndexData[i + 2]];
+
+        v1.position = view * v1.position;
+        v2.position = view * v2.position;
+        v3.position = view * v3.position;
+
+        v1.position = perspective * v1.position;
+        v2.position = perspective * v2.position;
+        v3.position = perspective * v3.position;
+
+        rasterizeTriangle(v1, v2, v3);
     }
 }
 
