@@ -26,15 +26,15 @@ namespace TempRenderer {
         view.matrix[2][2] = z.z;
         view.matrix[2][3] = -z.dot(position);
 
-        view.matrix[3][3] = -1;
+        view.matrix[3][3] = 1;
         return view;
     }
 
     Matrix4f Camera::PerspectiveMatrix(float aspect) const {
         Matrix4f perspective{};
         float tanHalfFov = Angle::tan(fov / 2);
-        perspective.matrix[0][0] = 1 / tanHalfFov;
-        perspective.matrix[1][1] = 1 / (aspect * tanHalfFov);
+        perspective.matrix[0][0] = -1 / (aspect * tanHalfFov);
+        perspective.matrix[1][1] = 1 / tanHalfFov;
         perspective.matrix[2][2] = (near + far) / (near - far);
         perspective.matrix[2][3] = 2 * far * near / (far - near);
         perspective.matrix[3][2] = 1;

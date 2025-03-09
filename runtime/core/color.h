@@ -23,6 +23,7 @@ struct Color {
     Color operator*(float f) const { return {r * f, g * f, b * f}; }
     friend Color operator*(float f, const Color& color) { return {color.r * f, color.g * f, color.b * f}; }
 
+    cv::Scalar toScalar() const { return {b * 255, g * 255, r * 255}; }
 };
 
 }

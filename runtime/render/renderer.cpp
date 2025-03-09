@@ -8,18 +8,18 @@ namespace TempRenderer {
 
 void Renderer::resizeScreen(int width, int height) {
     screen.resize(width, height);
-    frameBuffer = cv::Mat::zeros(height, width, CV_8UC3);
-    depthBuffer = cv::Mat::ones(height, width, CV_32F);
+    frameBuffer = cv::Mat{height, width, CV_8UC3, freshColor.toScalar()};
+    depthBuffer = cv::Mat{height, width, CV_32F, -1.f};
 }
 
 void Renderer::clear() {
-    frameBuffer.setTo(cv::Scalar(0, 0, 0));
-    depthBuffer.setTo(1.f);
+    frameBuffer.setTo(freshColor.toScalar());
+    depthBuffer.setTo(-1.f);
 }
 
 void Renderer::viewportTransform(TempRenderer::Vector3f &coordinate) const {
     coordinate.x = (coordinate.x + 1) * 0.5f * screen.width;
-    coordinate.y = (coordinate.y + 1) * 0.5f * screen.width;
+    coordinate.y = (coordinate.y + 1) * 0.5f * screen.height;
 }
 
 void Renderer::rasterizeTriangle(const Vertex &v1, const Vertex &v2, const Vertex &v3) {
@@ -40,10 +40,10 @@ void Renderer::rasterizeTriangle(const Vertex &v1, const Vertex &v2, const Verte
     for (int y = minY; y <= maxY; ++y) {
         for (int x = minX; x <= maxX; ++x) {
             Vector3f p(x + 0.5f, y + 0.5f, 0);
-            Vector3f bary = Triangle::Barycentric(p1, p2, p3, p);
+            Vector3f bary = Triangle::BaryCentric2D(p1, p2, p3, p);
             if (bary.x < 0 || bary.y < 0 || bary.z < 0) continue;
-            float depth = p1.z * bary.x + p2.z * bary.y + p3.z + bary.z;
-            if (depth < depthBuffer.at<float>(y, x)) {
+            float depth = p1.z * bary.x + p2.z * bary.y + p3.z * bary.z;
+            if (depth > depthBuffer.at<float>(y, x)) {
                 Color color = v1.color * bary.x + v2.color * bary.y + v3.color * bary.z;
                 frameBuffer.at<cv::Vec3b>(y, x) = cv::Vec3b(color.b * 255, color.g * 255, color.r * 255);
                 depthBuffer.at<float>(y, x) = depth;

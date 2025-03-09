@@ -104,11 +104,21 @@ Vector4f Matrix4f::operator*(Vector4f rhs) const {
     return {matrix[0][0] * rhs.x + matrix[0][1] * rhs.y + matrix[0][2] * rhs.z + matrix[0][3] * rhs.w,
             matrix[1][0] * rhs.x + matrix[1][1] * rhs.y + matrix[1][2] * rhs.z + matrix[1][3] * rhs.w,
             matrix[2][0] * rhs.x + matrix[2][1] * rhs.y + matrix[2][2] * rhs.z + matrix[2][3] * rhs.w,
-            matrix[3][0] * rhs.x + matrix[3][1] * rhs.y + matrix[2][2] * rhs.z + matrix[3][3] * rhs.w};
+            matrix[3][0] * rhs.x + matrix[3][1] * rhs.y + matrix[3][2] * rhs.z + matrix[3][3] * rhs.w};
 }
 
 Vector3f Matrix4f::operator*(Vector3f rhs) const {
-    return (*this * Vector4f{rhs}).toVector3f();
+    Vector4f v = (*this * Vector4f{rhs});
+    return v.toVector3f();
+}
+
+std::ostream &operator<<(std::ostream &out, const Matrix4f &matrix) {
+    out << "[" << std::endl;
+    for (const float* lst: matrix.matrix) {
+        out << "[" << lst[0] << " " << lst[1] << " " << lst[2] << " " << lst[3] << "]" << std::endl;
+    }
+    out << "]" << std::endl;
+    return out;
 }
 
 

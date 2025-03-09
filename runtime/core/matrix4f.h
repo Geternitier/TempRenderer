@@ -32,14 +32,7 @@ struct Matrix4f {
     Vector3f operator*(Vector3f rhs) const;
 
     // 输出
-    friend std::ostream& operator<<(std::ostream& out, const Matrix4f& matrix) {
-        out << "[" << std::endl;
-        for (const float* lst: matrix.matrix) {
-            out << "[" << lst[0] << " " << lst[1] << " " << lst[2] << " " << lst[3] << "]" << std::endl;
-        }
-        out << "]" << std::endl;
-        return out;
-    }
+    friend std::ostream& operator<<(std::ostream& out, const Matrix4f& matrix);
 };
 
 }

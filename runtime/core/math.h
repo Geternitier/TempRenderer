@@ -12,6 +12,7 @@ class Math {
 public:
     constexpr static float PI = 3.1415926535897;
     static float sqrt(float value) { return std::sqrt(value); }
+    static float fabs(float value) { return std::fabs(value); }
 };
 
 } // TempRenderer

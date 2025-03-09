@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "./math.h"
 #include "vertex.h"
 
 namespace TempRenderer {
@@ -11,23 +12,32 @@ namespace TempRenderer {
 struct Triangle {
     Vertex vertexes[3];
 
-    static Vector3f Barycentric(Vector3f a, Vector3f b, Vector3f c, Vector3f p) {
-        Vector3f v0 = b - a;
-        Vector3f v1 = c - a;
-        Vector3f v2 = p - a;
+    static float CrossArea(const Vector3f& a, const Vector3f& b) {
+        return a.cross(b).norm() / 2;
+    }
 
-        float d00 = v0.dot(v0);
-        float d01 = v0.dot(v1);
-        float d11 = v1.dot(v1);
-        float d20 = v2.dot(v0);
-        float d21 = v2.dot(v1);
-        float denom = d00 * d11 - d01 * d01;
+    static float CrossArea2D(const Vector3f& a, const Vector3f& b) {
+        return (a.x * b.y - a.y * b.x) / 2;
+    }
 
-        float v = (d11 * d20 - d01 * d21) / denom;
-        float w = (d00 * d21 - d01 * d20) / denom;
-        float u = 1 - v - w;
+    static Vector3f BaryCentric(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Vector3f& p) {
+        float s_abc = CrossArea(a - b, a - c);
+        float s_bcp = CrossArea(c - b, p - b);
+        float s_acp = CrossArea(a - c, p - c);
 
-        return {u, v, w};
+        float alpha = s_bcp / s_abc;
+        float beta = s_acp / s_abc;
+        return {alpha, beta, 1 - alpha - beta};
+    }
+
+    static Vector3f BaryCentric2D(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Vector3f& p) {
+        float s_abc = CrossArea2D(a - b, a - c);
+        float s_bcp = CrossArea2D(c - b, p - b);
+        float s_acp = CrossArea2D(a - c, p - c);
+
+        float alpha = s_bcp / s_abc;
+        float beta = s_acp / s_abc;
+        return {alpha, beta, 1 - alpha - beta};
     }
 };
 

@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <iostream>
+
 #include "./math.h"
 
 namespace TempRenderer {
@@ -28,6 +30,8 @@ public:
 
     Vector3f operator-() const { return {-x, -y, -z}; }
     Vector3f operator-(const Vector3f& rhs) const { return {x - rhs.x, y - rhs.y, z - rhs.z}; }
+
+    friend std::ostream& operator<<(std::ostream& out, const Vector3f& v);
 };
 
 }

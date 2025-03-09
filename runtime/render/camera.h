@@ -13,6 +13,14 @@ namespace TempRenderer {
 /// 相机类
 /// 相机坐标系: up为y轴, look为-z轴, y叉乘z得x轴
 class Camera {
+    Vector3f position;
+    Vector3f look;
+    Vector3f up;
+
+    Angle fov;
+    float near;
+    float far;
+
 public:
     Camera(Vector3f pos, Vector3f look, Vector3f up): position(pos), look(look), up(up),
                                                       fov{}, near(1.f), far(1000.f) {}
@@ -31,14 +39,6 @@ public:
     Matrix4f PerspectiveMatrix(float aspect) const;
     static Matrix4f OrthographicMatrix(float l, float b, float n, float r, float t, float f);
 
-private:
-    Vector3f position;
-    Vector3f look;
-    Vector3f up;
-
-    Angle fov;
-    float near;
-    float far;
 };
 
 } // TempRenderer

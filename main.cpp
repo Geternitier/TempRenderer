@@ -8,16 +8,22 @@
 using namespace TempRenderer;
 
 int main() {
-    Renderer renderer{800, 600};
+    int width = 1920;
+    int height = 1080;
+    Renderer renderer{width, height};
     auto cube = createCube();
-    Camera camera{{0, 0, 3}, {0, 0, -1}, {0, 1, 0}};
+    Camera camera{{2, 0, 2}, {-1, 0, -1}, {0, 1, 0}};
+    camera.setFov({60, DEGREE});
+    camera.setNear(-0.1f);
+    camera.setFar(-50.f);
     camera.normalize();
     renderer.setCamera(&camera);
+
     renderer.clear();
 
     Matrix4f view = camera.ViewMatrix();
     std::cout << view;
-    Matrix4f perspective = camera.PerspectiveMatrix(800. / 600);
+    Matrix4f perspective = camera.PerspectiveMatrix(width * 1.f / height);
     std::cout << perspective;
 
     for (int i = 0; i < cube.size(); i += 3) {

@@ -40,10 +40,10 @@ enum AngleType {
 class Angle {
     float angle;
     AngleType type;
-    Angle(float f, AngleType t): angle(f), type(t) {}
 
 public:
     Angle(): angle(120), type(DEGREE) {};
+    Angle(float f, AngleType t): angle(f), type(t) {}
     explicit Angle(Radian radian) { angle = radian.value(); type = RADIAN; }
     explicit Angle(Degree degree) { angle = degree.value(); type = DEGREE; }
 
