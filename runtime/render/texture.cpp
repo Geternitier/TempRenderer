@@ -7,7 +7,7 @@
 namespace TempRenderer {
 
 std::vector<Texture> Texture::textureAsset;
-std::filesystem::path Texture::texturePath = Config::AssetPath() / "textures";
+std::filesystem::path Texture::imagePath = Config::AssetPath() / "images";
 
 cv::Vec3b Texture::getColor(Vector2f uv) const {
     int y = (int) floor(uv.y * texture.rows);
@@ -15,8 +15,8 @@ cv::Vec3b Texture::getColor(Vector2f uv) const {
     return texture.at<cv::Vec3b>(y, x);
 }
 
-Texture Texture::LoadTexture(std::string filename) {
-    std::filesystem::path filepath = Texture::texturePath / filename;
+Texture Texture::LoadImage(const std::string& filename) {
+    std::filesystem::path filepath = Texture::imagePath / filename;
     Texture t{cv::imread(filepath)};
     textureAsset.push_back(t);
     return t;

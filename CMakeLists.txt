@@ -40,6 +40,7 @@ add_executable(TempRenderer main.cpp
         runtime/render/texture.h
         runtime/core/vector2f.h
         runtime/util/application.cpp
-        runtime/util/application.h)
+        runtime/util/application.h
+        runtime/resource/sphere.h)
 
 target_link_libraries(TempRenderer ${OpenCV_LIBS})

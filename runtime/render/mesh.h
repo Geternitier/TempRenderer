@@ -22,6 +22,7 @@ struct Mesh {
     std::vector<unsigned int> vertexIndexData;
     static std::filesystem::path meshSavePath;
 
+    Mesh() = default;
     Mesh(unsigned int vertexNum,
          unsigned int vertexIndexNum,
          std::vector<Vertex> vertexData,
@@ -46,7 +47,7 @@ struct Mesh {
         file.write(reinterpret_cast<const char*>(&vertexNum), sizeof(unsigned int));
         file.write(reinterpret_cast<const char*>(&vertexIndexNum), sizeof(unsigned int));
 
-        // 写入顶点数据（每个顶点6个float）
+        // 写入顶点数据（每个顶点8个float）
         for (const auto& vertex : vertexData) {
             // 写入位置
             file.write(reinterpret_cast<const char*>(&vertex.position.x), sizeof(float));
@@ -56,6 +57,10 @@ struct Mesh {
             file.write(reinterpret_cast<const char*>(&vertex.color.r), sizeof(float));
             file.write(reinterpret_cast<const char*>(&vertex.color.g), sizeof(float));
             file.write(reinterpret_cast<const char*>(&vertex.color.b), sizeof(float));
+            // 写入纹理与坐标
+            file.write(reinterpret_cast<const char*>(&vertex.textureIndex), sizeof(int));
+            file.write(reinterpret_cast<const char*>(&vertex.uv.x), sizeof(float));
+            file.write(reinterpret_cast<const char*>(&vertex.uv.y), sizeof(float));
         }
 
         // 写入索引数据
@@ -63,7 +68,7 @@ struct Mesh {
                    vertexIndexData.size() * sizeof(unsigned int));
     }
 
-    static Mesh load(const std::string& filename) {
+    static Mesh Load(const std::string& filename) {
         std::filesystem::path filepath = meshSavePath / filename;
         std::ifstream file(filepath, std::ios::binary);
         if (!file.is_open()) {
@@ -86,14 +91,18 @@ struct Mesh {
         std::vector<Vertex> vertices;
         vertices.reserve(vertexNum);
         for (unsigned int i = 0; i < vertexNum; ++i) {
-            float x, y, z, r, g, b;
+            float x, y, z, r, g, b, u, v;
+            int index;
             file.read(reinterpret_cast<char*>(&x), sizeof(float));
             file.read(reinterpret_cast<char*>(&y), sizeof(float));
             file.read(reinterpret_cast<char*>(&z), sizeof(float));
             file.read(reinterpret_cast<char*>(&r), sizeof(float));
             file.read(reinterpret_cast<char*>(&g), sizeof(float));
             file.read(reinterpret_cast<char*>(&b), sizeof(float));
-            vertices.emplace_back(Vertex{Vector3f(x, y, z), Color(r, g, b)});
+            file.read(reinterpret_cast<char*>(&index), sizeof(int));
+            file.read(reinterpret_cast<char*>(&u), sizeof(float));
+            file.read(reinterpret_cast<char*>(&v), sizeof(float));
+            vertices.emplace_back(Vertex{{x, y, z}, {r, g, b}, index, {u, v}});
         }
 
         // 读取索引数据

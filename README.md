@@ -14,6 +14,12 @@ Start from Scratch and Update Whenever
      - MSAA
      - FXAA
 3. 简单键盘交互，窗口刷新 OK
+4. 可渲染对象：
+   - 几何体
+     - 显式Mesh OK
+     - 隐式
+   - 地理
+   - 大气
 
 
 ## Current 3rd Party

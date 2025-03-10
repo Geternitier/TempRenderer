@@ -1,17 +1,17 @@
 #include <opencv2/opencv.hpp>
-#include <iostream>
 
 #include "render/renderer.h"
 #include "render/texture.h"
 #include "resource/cube.h"
+#include "resource/sphere.h"
 #include "util/application.h"
 
 using namespace TempRenderer;
 
 int main() {
     Application::Init();
-    Texture::LoadTexture("yuanshen.jpeg");
-    Mesh mesh = createCubeTextureMesh();
+    Texture::LoadImage("yuanshen.jpeg");
+    Mesh mesh = createSphereMesh({0, 0, 0}, 1, {1, 1, 1});
     Application::AddMesh(mesh);
 
     Camera camera{{2, 0, 2}, {-1, 0, -1}, {0, 1, 0},

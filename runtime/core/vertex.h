@@ -13,8 +13,8 @@ namespace TempRenderer{
 struct Vertex {
     Vector3f position;
     Color color;
-    int textureIndex;
     Vector2f uv;
+    int textureIndex;
 
     Vertex() = default;
     Vertex(Vector3f pos, Color c): position(pos), color(c), textureIndex(-1), uv{} {}

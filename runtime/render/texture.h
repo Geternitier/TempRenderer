@@ -19,13 +19,13 @@ class Texture {
     cv::Mat texture;
 
     static std::vector<Texture> textureAsset;
-    static std::filesystem::path texturePath;
+    static std::filesystem::path imagePath;
 
     Texture(cv::Mat texture): texture(std::move(texture)) {}
 public:
     cv::Vec3b getColor(Vector2f uv) const;
 
-    static Texture LoadTexture(std::string filename);
+    static Texture LoadImage(const std::string& filename);
     static const Texture& GetTexture(int index) { return textureAsset[index]; }
 
 };
