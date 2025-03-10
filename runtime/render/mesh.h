@@ -5,11 +5,13 @@
 #pragma once
 
 #include <fstream>
+#include <filesystem>
 #include <iostream>
 #include <utility>
 #include <vector>
 
 #include "core/vertex.h"
+#include "resource/config.h"
 
 namespace TempRenderer {
 
@@ -18,6 +20,7 @@ struct Mesh {
     unsigned int vertexIndexNum;
     std::vector<Vertex> vertexData;
     std::vector<unsigned int> vertexIndexData;
+    static std::filesystem::path meshSavePath;
 
     Mesh(unsigned int vertexNum,
          unsigned int vertexIndexNum,
@@ -27,7 +30,8 @@ struct Mesh {
                                            vertexData(std::move(vertexData)),
                                            vertexIndexData(std::move(vertexIndexData)) {}
 
-    void save(std::string filepath) const {
+    void save(std::string filename) const {
+        std::filesystem::path filepath = meshSavePath / filename;
         std::ofstream file(filepath, std::ios::binary);
         if (!file.is_open()) {
             std::cout << "无法打开文件进行写入: " << filepath << std::endl;
@@ -59,10 +63,11 @@ struct Mesh {
                    vertexIndexData.size() * sizeof(unsigned int));
     }
 
-    static Mesh load(const std::string& filepath) {
+    static Mesh load(const std::string& filename) {
+        std::filesystem::path filepath = meshSavePath / filename;
         std::ifstream file(filepath, std::ios::binary);
         if (!file.is_open()) {
-            throw std::runtime_error("无法打开文件: " + filepath);
+            throw std::runtime_error("无法打开文件: " + filepath.string());
         }
 
         // 验证文件头

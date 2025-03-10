@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.21)
 project(TempRenderer)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 include_directories(runtime)
+include_directories(thirdparty)
 
 set(OpenCV_DIR /opt/homebrew/Cellar/opencv/4.11.0_1/lib/cmake/opencv4)
 find_package(OpenCV REQUIRED)
@@ -17,7 +18,7 @@ add_executable(TempRenderer main.cpp
         runtime/render/renderer.h
         runtime/util/screen.cpp
         runtime/util/screen.h
-        asset/cube.h
+        runtime/resource/cube.h
         runtime/core/matrix4f.h
         runtime/core/transform.h
         runtime/core/triangle.h
@@ -31,6 +32,14 @@ add_executable(TempRenderer main.cpp
         runtime/core/vector4f.h
         runtime/core/matrix4f.cpp
         scene/index.cpp
-        scene/index.h)
+        scene/index.h
+        runtime/resource/config.cpp
+        runtime/resource/config.h
+        runtime/render/mesh.cpp
+        runtime/render/texture.cpp
+        runtime/render/texture.h
+        runtime/core/vector2f.h
+        runtime/util/application.cpp
+        runtime/util/application.h)
 
 target_link_libraries(TempRenderer ${OpenCV_LIBS})

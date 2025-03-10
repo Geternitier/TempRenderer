@@ -45,11 +45,12 @@ public:
 
     Vector3f getPosition() const { return position; }
 
-    void setPosition(Vector3f pos) { position = pos; }
-    void setLookUp(Vector3f l, Vector3f u) { look = l; up = u; }
-    void setFov(Angle angle) { fov = angle; }
-    void setNear(float n) { near = n; }
-    void setFar(float f) { far = f; }
+    void move(Vector3f pace);
+    void setPosition(Vector3f pos) { position = pos; calViewMatrix(); }
+    void setLookUp(Vector3f l, Vector3f u) { look = l; up = u; normalize(); calViewMatrix(); }
+    void setFov(Angle angle) { fov = angle; calPerspectiveMatrix(Screen::Aspect()); }
+    void setNear(float n) { near = n; calPerspectiveMatrix(Screen::Aspect()); }
+    void setFar(float f) { far = f; calPerspectiveMatrix(Screen::Aspect()); }
 
     void normalize() { look.normalize(); up.normalize(); }
 

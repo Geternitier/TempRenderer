@@ -4,6 +4,8 @@
 
 #include "renderer.h"
 
+#include "texture.h"
+
 namespace TempRenderer {
 
 void Renderer::clear() {
@@ -38,8 +40,16 @@ void Renderer::rasterizeTriangle(const Vertex &v1, const Vertex &v2, const Verte
             if (bary.x < 0 || bary.y < 0 || bary.z < 0) continue;
             float depth = p1.z * bary.x + p2.z * bary.y + p3.z * bary.z;
             if (depth > depthBuffer.at<float>(y, x)) {
-                Color color = v1.color * bary.x + v2.color * bary.y + v3.color * bary.z;
-                frameBuffer.at<cv::Vec3b>(y, x) = cv::Vec3b(color.b * 255, color.g * 255, color.r * 255);
+                cv::Vec3b color;
+                if ((v1.textureIndex >= 0 && v2.textureIndex >=0 && v3.textureIndex >=0) &&
+                        (v1.textureIndex == v2.textureIndex && v2.textureIndex == v3.textureIndex)) {
+                    Vector2f v = v1.uv * bary.x + v2.uv * bary.y + v3.uv * bary.z;
+                    color = Texture::GetTexture(v1.textureIndex).getColor(v);
+                } else {
+                    Color c = v1.color * bary.x + v2.color * bary.y + v3.color * bary.z;
+                    color = cv::Vec3b(c.b * 255, c.g * 255, c.r * 255);
+                }
+                frameBuffer.at<cv::Vec3b>(y, x) = color;
                 depthBuffer.at<float>(y, x) = depth;
             }
         }
@@ -58,7 +68,7 @@ void Renderer::render(const Mesh &mesh) {
     Matrix4f perspective = camera->getProjectionMatrix();
 
     Vertex v1{}, v2{}, v3{};
-    for (int i = 0; i < mesh.vertexIndexNum; ++i) {
+    for (int i = 0; i < mesh.vertexIndexNum; i += 3) {
         v1 = mesh.vertexData[mesh.vertexIndexData[i]];
         v2 = mesh.vertexData[mesh.vertexIndexData[i + 1]];
         v3 = mesh.vertexData[mesh.vertexIndexData[i + 2]];

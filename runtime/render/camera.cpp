@@ -36,7 +36,7 @@ void Camera::calPerspectiveMatrix(float aspect) {
     projectionMatrix.fill(0);
     float tanHalfFov = Angle::tan(fov / 2);
     projectionMatrix.matrix[0][0] = -1 / (aspect * tanHalfFov);
-    projectionMatrix.matrix[1][1] = 1 / tanHalfFov;
+    projectionMatrix.matrix[1][1] = -1 / tanHalfFov;
     projectionMatrix.matrix[2][2] = (near + far) / (near - far);
     projectionMatrix.matrix[2][3] = 2 * far * near / (far - near);
     projectionMatrix.matrix[3][2] = 1;
@@ -53,6 +53,14 @@ Matrix4f Camera::OrthographicMatrix(float l, float b, float n, float r, float t,
     orthographic.matrix[3][3] = 1;
 
     return orthographic;
+}
+
+void Camera::move(Vector3f pace) {
+    Vector3f x = up.cross(-look);
+    position += look * pace.z;
+    position += up * pace.y;
+    position += x * pace.x;
+    calViewMatrix();
 }
 
 } // TempRenderer

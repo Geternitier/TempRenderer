@@ -29,7 +29,12 @@ public:
     Vector3f cross(const Vector3f& rhs) const;
 
     Vector3f operator-() const { return {-x, -y, -z}; }
+    Vector3f operator+(const Vector3f& rhs) const { return {x + rhs.x, y + rhs.y, z + rhs.z}; }
     Vector3f operator-(const Vector3f& rhs) const { return {x - rhs.x, y - rhs.y, z - rhs.z}; }
+    Vector3f operator*(float rhs) const { return {x * rhs, y * rhs, z * rhs}; }
+
+    void operator+=(const Vector3f& rhs) { x += rhs.x; y += rhs.y; z += rhs.z; }
+    void operator-=(const Vector3f& rhs) { x -= rhs.x; y -= rhs.y; z -= rhs.z; }
 
     friend std::ostream& operator<<(std::ostream& out, const Vector3f& v);
 };
