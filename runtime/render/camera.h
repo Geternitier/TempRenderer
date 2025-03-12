@@ -44,6 +44,7 @@ public:
     }
 
     Vector3f getPosition() const { return position; }
+    Vector3f getLook() const { return look; }
 
     void move(Vector3f pace);
     void setPosition(Vector3f pos) { position = pos; calViewMatrix(); }
@@ -63,7 +64,7 @@ public:
     static Matrix4f OrthographicMatrix(float l, float b, float n, float r, float t, float f);
 
     static void setCurrentCamera(Camera* camera) { currentCamera = camera; }
-    static const Camera* getCurrentCamera() { return currentCamera; }
+    static Camera* getCurrentCamera() { return currentCamera; }
 
 };
 

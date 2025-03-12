@@ -3,7 +3,8 @@
 //
 
 #include "renderer.h"
-
+#include "light/light.h"
+#include "light/direction.h"
 #include "texture.h"
 
 namespace TempRenderer {
@@ -38,8 +39,8 @@ void Renderer::rasterizeTriangle(const Vertex &v1, const Vertex &v2, const Verte
             Vector3f p(x + 0.5f, y + 0.5f, 0);
             Vector3f bary = Triangle::BaryCentric2D(p1, p2, p3, p);
             if (bary.x < 0 || bary.y < 0 || bary.z < 0) continue;
-            float depth = p1.z * bary.x + p2.z * bary.y + p3.z * bary.z;
-            if (depth > depthBuffer.at<float>(y, x)) {
+            p.z = p1.z * bary.x + p2.z * bary.y + p3.z * bary.z;
+            if (p.z > depthBuffer.at<float>(y, x)) {
                 cv::Vec3b color;
                 if ((v1.textureIndex >= 0 && v2.textureIndex >=0 && v3.textureIndex >=0) &&
                         (v1.textureIndex == v2.textureIndex && v2.textureIndex == v3.textureIndex)) {
@@ -47,10 +48,20 @@ void Renderer::rasterizeTriangle(const Vertex &v1, const Vertex &v2, const Verte
                     color = Texture::GetTexture(v1.textureIndex).getColor(v);
                 } else {
                     Color c = v1.color * bary.x + v2.color * bary.y + v3.color * bary.z;
-                    color = cv::Vec3b(c.b * 255, c.g * 255, c.r * 255);
+                    color = c.toVec3b();
                 }
-                frameBuffer.at<cv::Vec3b>(y, x) = color;
-                depthBuffer.at<float>(y, x) = depth;
+                Color light{};
+                Vector3f normal = (v1.normal + v2.normal + v3.normal);
+                normal.normalize();
+                for (int i = 0; i < Light::lights.size(); ++i) {
+                    light += Light::lights[i]->calculatePBR(p, normal,
+                                                            Camera::getCurrentCamera()->getLook(),
+                                                            Color(color),
+                                                            v1.material);
+                }
+
+                frameBuffer.at<cv::Vec3b>(y, x) = light.toVec3b();
+                depthBuffer.at<float>(y, x) = p.z;
             }
         }
     }
