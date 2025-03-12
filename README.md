@@ -4,7 +4,7 @@ Start from Scratch and Update Whenever
 
 ## 进展与规划
 1. 变换 OK
-2. 光栅化：
+2. 光栅化：Forward Rendering
    - 深度缓冲 OK
    - 纹理贴图
      - 重心坐标插值 OK
@@ -36,7 +36,7 @@ Start from Scratch and Update Whenever
    - runtime/core: data structures and algorithms
    - runtime/render: render components
    - runtime/resource: filepath config and basic geometry mesh builder
-2. asset: not include in git, containing things like images
+2. asset: containing things like images
 
 ## 3rd Party
 1. OpenCV: show and read images
