@@ -29,9 +29,18 @@ void Application::Init() {
                                          {1, 1, 1}, 50, 50);
     Application::AddMesh(mesh);
 
-    Camera camera{{2, 0, 2}, {-1, 0, -1}, {0, 1, 0},
-                  {60, DEGREE}, -0.1f, -50.f};
-    Camera::setCurrentCamera(&camera);
+    auto* camera = new Camera({2, 0, 2}, {-1, 0, -1}, {0, 1, 0},
+                              {60, DEGREE}, -0.1f, -50.f);
+    Camera::setCurrentCamera(camera);
+}
+
+void Application::Run() {
+    for (Mesh& mesh: meshes) renderer.render(mesh);
+    renderer.show(name);
+
+    while (true) {
+        Application::Update();
+    }
 }
 
 void Application::Update() {

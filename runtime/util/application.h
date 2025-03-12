@@ -22,10 +22,9 @@ class Application {
 public:
     static void Init();
     static void Init(std::string s) { name = std::move(s); Init(); }
-
-    static void AddMesh(Mesh& mesh) { meshes.push_back(mesh); }
-
+    static void Run();
     static void Update();
+    static void AddMesh(Mesh& mesh) { meshes.push_back(mesh); }
 
 };
 

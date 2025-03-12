@@ -23,8 +23,8 @@ class Camera {
     float near;
     float far;
 
-    Matrix4f viewMatrix;
-    Matrix4f projectionMatrix;
+    Matrix4f viewMatrix{};
+    Matrix4f projectionMatrix{};
 
     static Camera* currentCamera;
 
